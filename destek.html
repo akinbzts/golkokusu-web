@@ -3,177 +3,298 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gol Kokusu – Destek</title>
+  <title>Destek — Gol Kokusu</title>
+  <meta name="description" content="Gol Kokusu destek merkezi: sık sorulan sorular, abonelik yönetimi, hesap işlemleri ve iletişim." />
+  <link rel="icon" type="image/svg+xml" href="logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;600;700;800&display=swap&subset=latin-ext" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080602;
+      --panel: #12100a;
+      --line: #2a2515;
+      --yellow: #ffc800;
+      --yellow-soft: #ffe066;
+      --text: #f4f1e6;
+      --muted: #a39b82;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #0d0d0d;
-      color: #e0e0e0;
-      line-height: 1.7;
-      padding: 0 16px 60px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Manrope", -apple-system, sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
     }
-    .container { max-width: 780px; margin: 0 auto; }
-    header {
-      text-align: center;
-      padding: 48px 0 32px;
-      border-bottom: 1px solid #2a2a2a;
-      margin-bottom: 40px;
+    ::selection { background: var(--yellow); color: #000; }
+
+    .grain {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none; opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
-    header h1 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.5px;
+
+    /* ── Nav ────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 28px;
+      background: linear-gradient(to bottom, rgba(8,6,2,.92), rgba(8,6,2,.75));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
     }
-    header p { font-size: 0.9rem; color: #888; margin-top: 8px; }
-    h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 36px 0 12px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid #222;
+    .nav-brand {
+      font-family: "Anton", sans-serif; font-size: 20px; letter-spacing: .04em;
+      color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px;
     }
-    h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #cccccc;
-      margin: 24px 0 8px;
+    .nav-brand img { width: 30px; height: 30px; }
+    .nav-brand b { color: var(--yellow); font-weight: 400; }
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
+      transition: color .2s;
     }
-    p { margin-bottom: 12px; font-size: 0.93rem; color: #c8c8c8; }
-    ul { margin: 8px 0 12px 20px; }
-    ul li { font-size: 0.93rem; color: #c8c8c8; margin-bottom: 6px; }
-    .contact-box {
-      background: #161616;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      padding: 20px 24px;
-      margin-bottom: 32px;
-      font-size: 0.95rem;
-      color: #ccc;
-      text-align: center;
+    .nav-links a:hover { color: var(--yellow); }
+    .nav-cta {
+      background: var(--yellow); color: #000 !important; padding: 8px 18px; border-radius: 999px;
+      font-weight: 800 !important;
+      transition: transform .2s, box-shadow .2s;
     }
-    .contact-box strong { color: #e0e0e0; display: block; margin-bottom: 8px; font-size: 1rem; }
-    .contact-box .mail {
-      display: inline-block;
-      margin-top: 6px;
-      background: #1e2b25;
-      border: 1px solid #2f4a3e;
-      border-radius: 8px;
-      padding: 10px 22px;
-      font-size: 1.05rem;
-      font-weight: 700;
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(255,200,0,.35); }
+    @media (max-width: 640px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+    /* ── Başlık ─────────────────────────────────────────────────────── */
+    .page-head {
+      position: relative; text-align: center; padding: 150px 20px 60px; overflow: hidden;
     }
-    .highlight { color: #4caf8a; font-weight: 600; }
-    a { color: #4caf8a; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    .page-head::before {
+      content: ""; position: absolute; top: -55%; left: 50%; transform: translateX(-50%);
+      width: 1100px; height: 700px; pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(255,200,0,.14) 0%, rgba(255,200,0,.04) 45%, transparent 70%);
+    }
+    .kicker {
+      font-size: 12px; font-weight: 800; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--yellow); margin-bottom: 14px;
+    }
+    h1 {
+      font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase;
+      font-size: clamp(44px, 8vw, 84px); line-height: 1; letter-spacing: .015em;
+      animation: rise .7s .1s both;
+    }
+    h1 b { color: var(--yellow); font-weight: 400; text-shadow: 0 0 50px rgba(255,200,0,.3); }
+    .page-head p { color: var(--muted); margin-top: 16px; font-size: 16px; animation: rise .7s .2s both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+    main { max-width: 860px; margin: 0 auto; padding: 0 24px 90px; }
+
+    /* ── İletişim kartı ─────────────────────────────────────────────── */
+    .contact {
+      border: 1.5px solid rgba(255,200,0,.5); border-radius: 24px;
+      background:
+        radial-gradient(500px 240px at 85% -30%, rgba(255,200,0,.13), transparent),
+        var(--panel);
+      padding: 40px 36px; text-align: center; margin-bottom: 60px;
+      animation: rise .7s .3s both;
+    }
+    .contact h2 {
+      font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase;
+      font-size: clamp(24px, 3.6vw, 32px); margin-bottom: 10px;
+    }
+    .contact p { color: var(--muted); font-size: 15px; max-width: 480px; margin: 0 auto; }
+    .mail-btn {
+      display: inline-block; margin-top: 22px; background: var(--yellow); color: #000;
+      font-weight: 800; font-size: 17px; text-decoration: none; padding: 14px 34px; border-radius: 999px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .mail-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,200,0,.35); }
+    .contact small { display: block; margin-top: 14px; color: var(--muted); font-size: 12.5px; }
+    .contact small b { color: var(--yellow-soft); }
+
+    /* ── SSS ────────────────────────────────────────────────────────── */
+    .sec-title {
+      font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase;
+      font-size: clamp(26px, 4vw, 38px); margin: 0 0 24px;
+    }
+    details {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+      margin-bottom: 10px; overflow: hidden;
+      transition: border-color .25s;
+    }
+    details:hover, details[open] { border-color: rgba(255,200,0,.4); }
+    summary {
+      list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 18px 22px; font-weight: 800; font-size: 15.5px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "+"; font-family: "Anton", sans-serif; font-size: 22px; color: var(--yellow);
+      transition: transform .25s; flex-shrink: 0; line-height: 1;
+    }
+    details[open] summary::after { transform: rotate(45deg); }
+    .answer { padding: 0 22px 20px; color: var(--muted); font-size: 14.5px; }
+    .answer a { color: var(--yellow); text-decoration: none; font-weight: 700; }
+    .answer a:hover { text-decoration: underline; }
+    .answer ul { margin: 8px 0 0 18px; }
+    .answer li { margin-bottom: 6px; }
+    .answer b { color: var(--text); }
+
+    /* ── Yasal linkler ──────────────────────────────────────────────── */
+    .legal {
+      margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    @media (max-width: 560px) { .legal { grid-template-columns: 1fr; } }
+    .legal a {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+      padding: 18px 22px; text-decoration: none; color: var(--text); font-weight: 700; font-size: 14.5px;
+      transition: transform .2s, border-color .2s;
+    }
+    .legal a:hover { transform: translateY(-3px); border-color: rgba(255,200,0,.45); }
+    .legal a span { color: var(--yellow); font-family: "Anton", sans-serif; font-size: 18px; }
+
+    /* ── Footer ─────────────────────────────────────────────────────── */
     footer {
-      margin-top: 60px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #555;
-      border-top: 1px solid #1e1e1e;
-      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      padding: 44px 24px 54px; text-align: center;
+    }
+    .f-brand { font-family: "Anton", sans-serif; font-size: 22px; letter-spacing: .05em; }
+    .f-brand b { color: var(--yellow); font-weight: 400; }
+    .f-links { display: flex; gap: 26px; justify-content: center; margin: 20px 0 14px; flex-wrap: wrap; }
+    .f-links a { color: var(--muted); font-size: 13.5px; font-weight: 600; text-decoration: none; transition: color .2s; }
+    .f-links a:hover { color: var(--yellow); }
+    .copy { color: #5d573f; font-size: 12px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="grain"></div>
 
-  <header>
-    <h1>Gol Kokusu</h1>
-    <p>Destek Merkezi</p>
-    <p>Soruların, önerilerin veya yaşadığın sorunlar için buradayız.</p>
-  </header>
+<nav>
+  <a class="nav-brand" href="https://golkokusu.com"><img src="logo.svg" alt="" />GOL <b>KOKUSU</b></a>
+  <div class="nav-links">
+    <a href="https://golkokusu.com/#nasil">Nasıl Çalışır</a>
+    <a href="https://golkokusu.com/#ozellikler">Özellikler</a>
+    <a href="https://golkokusu.com/gizlilik">Gizlilik</a>
+    <a class="nav-cta" href="https://golkokusu.com/#indir">İndir</a>
+  </div>
+</nav>
 
-  <div class="contact-box">
-    <strong>📮 Bize Ulaşın</strong>
-    Her türlü soru, sorun bildirimi ve talep için bize e-posta gönderebilirsiniz:
-    <br/>
-    <a class="mail" href="mailto:destek@golkokusu.com">destek@golkokusu.com</a>
-    <p style="margin-top:12px; font-size:0.85rem; color:#888;">
-      Destek taleplerinize en <span class="highlight">kısa</span> sürede yanıt verilecektir.
-    </p>
+<header class="page-head">
+  <div class="kicker">Destek Merkezi</div>
+  <h1>Sana nasıl <b>yardım</b> edelim?</h1>
+  <p>Soruların, önerilerin veya yaşadığın sorunlar için buradayız.</p>
+</header>
+
+<main>
+  <!-- İletişim -->
+  <div class="contact">
+    <h2>Bize Ulaş</h2>
+    <p>Her türlü soru, sorun bildirimi ve talep için e-posta gönderebilirsin.
+      Hesap silme ve kişisel veri taleplerin de aynı adresten işleme alınır.</p>
+    <a class="mail-btn" href="mailto:destek@golkokusu.com">destek@golkokusu.com</a>
+    <small>Destek taleplerine en geç <b>2 iş günü</b> içinde yanıt verilir.</small>
   </div>
 
-  <h2>SIK SORULAN SORULAR</h2>
+  <!-- SSS -->
+  <h2 class="sec-title">Sık Sorulan <span style="color:var(--yellow)">Sorular</span></h2>
 
-  <h3>Uygulama ne işe yarar?</h3>
-  <p>
-    Gol Kokusu; futbol maçlarının canlı takibini, gol ve maç sonu anlık bildirimlerini ve istatistiksel
-    analiz ekranlarını sunan bir <span class="highlight">bilgilendirme ve eğlence uygulamasıdır</span>.
-    Bahis veya kumar hizmeti sunmaz.
-  </p>
+  <details open>
+    <summary>Uygulama ne işe yarar?</summary>
+    <div class="answer">
+      Gol Kokusu; futbol maçlarının canlı takibini, gol ve maç sonu anlık bildirimlerini ve
+      istatistiksel analiz ekranlarını sunan bir <b>bilgi ve eğlence uygulamasıdır</b>.
+      Bahis veya kumar hizmeti sunmaz, bu tür platformlara yönlendirme yapmaz.
+    </div>
+  </details>
 
-  <h3>Hesabımı nasıl oluştururum?</h3>
-  <p>
-    Uygulamayı indirip e-posta adresiniz ve bir şifre ile kayıt olabilirsiniz. Kayıt sonrası e-posta
-    adresinize gelen doğrulama bağlantısını onaylamanız gerekir.
-  </p>
+  <details>
+    <summary>Hesabımı nasıl oluştururum?</summary>
+    <div class="answer">
+      Uygulamayı indirip e-posta adresin ve bir şifre ile kayıt olabilirsin. Kayıt sonrası
+      e-posta adresine gelen <b>doğrulama bağlantısını</b> onaylaman gerekir.
+    </div>
+  </details>
 
-  <h3>Şifremi unuttum, ne yapmalıyım?</h3>
-  <p>
-    Giriş ekranındaki <span class="highlight">"Şifremi Unuttum"</span> bağlantısına tıklayın; e-posta
-    adresinize şifre sıfırlama bağlantısı gönderilir.
-  </p>
+  <details>
+    <summary>Şifremi unuttum, ne yapmalıyım?</summary>
+    <div class="answer">
+      Giriş ekranındaki <b>"Şifremi Unuttum"</b> bağlantısına tıkla; e-posta adresine
+      şifre sıfırlama bağlantısı gönderilir.
+    </div>
+  </details>
 
-  <h3>Bildirimler gelmiyor, ne yapabilirim?</h3>
-  <ul>
-    <li>Cihazınızın sistem ayarlarından Gol Kokusu için bildirim izninin açık olduğundan emin olun.</li>
-    <li>Uygulama içi Profil &gt; Bildirim Ayarları bölümünden ilgili bildirim türlerinin açık olduğunu kontrol edin.</li>
-    <li>Sorun devam ederse uygulamadan çıkıp yeniden giriş yapmayı deneyin.</li>
-  </ul>
+  <details>
+    <summary>Bildirimler gelmiyor, ne yapabilirim?</summary>
+    <div class="answer">
+      <ul>
+        <li>Cihazının sistem ayarlarından Gol Kokusu için bildirim izninin açık olduğundan emin ol.</li>
+        <li>Uygulama içi <b>Profil → Bildirim Ayarları</b> bölümünden ilgili bildirim türlerinin açık olduğunu kontrol et.</li>
+        <li>Sorun devam ederse uygulamadan çıkıp yeniden giriş yapmayı dene.</li>
+      </ul>
+    </div>
+  </details>
 
-  <h3>Premium abonelik neler sunar?</h3>
-  <p>
-    Premium Üyelik; sınırsız canlı analiz, tüm bildirimler ve reklamsız deneyim sunar. Güncel fiyat
-    uygulama içindeki abonelik ekranında görüntülenir.
-  </p>
+  <details>
+    <summary>Premium üyelik neler sunar?</summary>
+    <div class="answer">
+      Premium Üyelik; <b>sınırsız canlı analiz</b>, tüm bildirim türleri ve <b>reklamsız deneyim</b> sunar.
+      Güncel fiyat, uygulama içindeki abonelik ekranında görüntülenir.
+    </div>
+  </details>
 
-  <h3>Aboneliğimi nasıl iptal ederim?</h3>
-  <p>
-    Abonelikler, satın alma yaptığınız mağaza tarafından yönetilir. İptal işlemi için:
-  </p>
-  <ul>
-    <li><strong>App Store (iOS):</strong> Ayarlar &gt; Apple Kimliğiniz &gt; Abonelikler yolunu izleyin veya
-      <a href="https://support.apple.com/tr-tr/HT202039" target="_blank" rel="noopener">Apple'ın abonelik yönetimi sayfasına</a> bakın.</li>
-    <li><strong>Google Play (Android):</strong> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a>
-      adresinden aboneliğinizi yönetebilirsiniz.</li>
-  </ul>
-  <p>
-    Abonelik, dönem sonundan en az 24 saat önce iptal edilmediği takdirde otomatik olarak yenilenir.
-    İade talepleri ilgili mağazanın (Apple/Google) politikalarına tabidir.
-  </p>
+  <details>
+    <summary>Aboneliğimi nasıl iptal ederim?</summary>
+    <div class="answer">
+      Abonelikler, satın alma yaptığın mağaza tarafından yönetilir:
+      <ul>
+        <li><b>App Store (iOS):</b> Ayarlar → Apple Kimliğin → Abonelikler yolunu izle veya
+          <a href="https://support.apple.com/tr-tr/HT202039" target="_blank" rel="noopener">Apple'ın abonelik yönetimi sayfasına</a> bak.</li>
+        <li><b>Google Play (Android):</b> <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a>
+          adresinden aboneliğini yönetebilirsin.</li>
+      </ul>
+      Abonelik, dönem sonundan en az 24 saat önce iptal edilmezse otomatik yenilenir.
+      İade talepleri ilgili mağazanın (Apple/Google) politikalarına tabidir.
+    </div>
+  </details>
 
-  <h3>Hesabımı nasıl silebilirim?</h3>
-  <p>
-    Uygulama içindeki Profil ekranından hesap silme işlemini başlatabilir veya
-    <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a> adresine e-posta göndererek hesabınızın ve
-    verilerinizin silinmesini talep edebilirsiniz.
-  </p>
+  <details>
+    <summary>Hesabımı nasıl silebilirim?</summary>
+    <div class="answer">
+      Uygulama içindeki <b>Profil</b> ekranından hesap silme işlemini başlatabilir veya
+      <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a> adresine e-posta göndererek
+      hesabının ve verilerinin silinmesini talep edebilirsin.
+    </div>
+  </details>
 
-  <h3>Kişisel verilerim nasıl işleniyor?</h3>
-  <p>
-    Ayrıntılı bilgi için <a href="https://golkokusu.com/gizlilik">Gizlilik Politikası ve Kullanım Koşulları</a>
-    sayfamızı inceleyebilirsiniz.
-  </p>
+  <details>
+    <summary>Kişisel verilerim nasıl işleniyor?</summary>
+    <div class="answer">
+      Ayrıntılı bilgi için <a href="https://golkokusu.com/gizlilik">Gizlilik Politikası ve Kullanım Koşulları</a>
+      sayfamızı inceleyebilirsin. KVKK kapsamındaki haklarını
+      <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a> adresine yazarak kullanabilirsin.
+    </div>
+  </details>
 
-  <h2>YASAL BELGELER</h2>
-  <ul>
-    <li><a href="https://golkokusu.com/gizlilik">Gizlilik Politikası ve Kullanım Koşulları</a></li>
-    <li><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">Kullanım Koşulları (Apple Standart EULA)</a></li>
-  </ul>
+  <!-- Yasal -->
+  <div class="legal">
+    <a href="https://golkokusu.com/gizlilik">Gizlilik Politikası ve Kullanım Koşulları <span>→</span></a>
+    <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">Kullanım Koşulları (Apple Standart EULA) <span>→</span></a>
+  </div>
+</main>
 
-  <h2>İLETİŞİM</h2>
-  <p>
-    E-posta: <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a>
-  </p>
+<footer>
+  <div class="f-brand">GOL <b>KOKUSU</b></div>
+  <div class="f-links">
+    <a href="https://golkokusu.com">Ana Sayfa</a>
+    <a href="https://golkokusu.com/gizlilik">Gizlilik Politikası ve Kullanım Koşulları</a>
+    <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a>
+  </div>
+  <div class="copy">© 2026 Akın Boztaş · Gol Kokusu · Tüm hakları saklıdır.</div>
+</footer>
 
-  <footer>
-    &copy; 2026 · Gol Kokusu · Tüm hakları saklıdır.
-  </footer>
-
-</div>
 </body>
 </html>

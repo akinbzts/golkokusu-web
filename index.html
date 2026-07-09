@@ -3,343 +3,545 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gol Kokusu</title>
-  <meta name="google-site-verification" content="DsBMFr2n4tDRxJE3zOwNBR_QRaqMjG9aiKV6ZAe1N-c" />
+  <title>Gol Kokusu — Golü Herkesten Önce Kokla</title>
+  <meta name="description" content="Canlı maç takibi, anlık gol bildirimleri ve istatistiğe dayalı analiz. Algoritmamız yüksek gol potansiyeli taşıyan maçları senin için koklar. App Store ve Google Play'de." />
+  <meta property="og:title" content="Gol Kokusu — Golü Herkesten Önce Kokla" />
+  <meta property="og:description" content="Kokuyu aldın mı? Ne kokusu? Gol Kokusu. App Store ve Google Play'de." />
+  <meta property="og:url" content="https://golkokusu.com" />
   <link rel="icon" type="image/svg+xml" href="logo.svg" />
-  <meta name="description" content="Gol Kokusu — Yüksek gol potansiyeli taşıyan maçları anında keşfet. Yakında iOS ve Android'de." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;600;700;800&display=swap&subset=latin-ext" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #121212;
-      --card: #1E1E1E;
-      --gold: #FFD700;
-      --green: #50C878;
-      --orange: #FF9800;
-      --red: #FF5252;
-      --muted: #9E9E9E;
-      --white: #F5F5F5;
+      --bg: #080602;
+      --panel: #12100a;
+      --panel-2: #1a170e;
+      --line: #2a2515;
+      --yellow: #ffc800;
+      --yellow-soft: #ffe066;
+      --text: #f4f1e6;
+      --muted: #a39b82;
+      --red: #ff3b30;
+      --green: #2ecc71;
     }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       background: var(--bg);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      color: var(--text);
+      font-family: "Manrope", -apple-system, sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--yellow); color: #000; }
+
+    /* ── Doku: tanecik + projektör ışıkları ─────────────────────────── */
+    .grain {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none; opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .floodlight {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .floodlight::before {
+      content: ""; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+      width: 1400px; height: 900px;
+      background: radial-gradient(ellipse at center, rgba(255,200,0,.16) 0%, rgba(255,200,0,.05) 40%, transparent 70%);
+    }
+    /* orta yuvarlak — saha çizgisi */
+    .pitch-circle {
+      position: absolute; left: 50%; bottom: -320px; transform: translateX(-50%);
+      width: 780px; height: 780px; border-radius: 50%;
+      border: 2px solid rgba(255,200,0,.10); pointer-events: none;
+    }
+    .pitch-circle::after {
+      content: ""; position: absolute; inset: 90px; border-radius: 50%;
+      border: 1px solid rgba(255,200,0,.06);
     }
 
-    /* HERO */
-    .hero {
-      width: 100%;
-      max-width: 860px;
-      padding: 80px 24px 60px;
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-block;
-      background: var(--card);
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 6px 16px;
-      border-radius: 20px;
-      margin-bottom: 32px;
-    }
-
-    .logo {
-      font-size: clamp(48px, 8vw, 80px);
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .logo span {
-      color: var(--gold);
-    }
-
-    .slogan {
-      font-size: clamp(14px, 2.5vw, 18px);
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 40px;
-      letter-spacing: 0.5px;
-    }
-
-    .description {
-      font-size: clamp(15px, 2vw, 18px);
-      color: #CCCCCC;
-      line-height: 1.7;
-      max-width: 620px;
-      margin: 0 auto 56px;
-    }
-
-    /* STORE BUTTONS */
-    .store-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .store-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--card);
-      border: 1px solid #333;
-      color: var(--white);
-      text-decoration: none;
+    /* ── Nav ────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 14px 28px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      opacity: 0.5;
-      cursor: pointer;
-      position: relative;
+      background: linear-gradient(to bottom, rgba(8,6,2,.92), rgba(8,6,2,.75));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
     }
-
-    .store-btn svg {
-      width: 24px;
-      height: 24px;
-      fill: var(--white);
-      flex-shrink: 0;
+    .nav-brand {
+      font-family: "Anton", sans-serif; font-size: 20px; letter-spacing: .04em;
+      color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px;
     }
-
-    .store-btn .store-label {
-      text-align: left;
+    .nav-brand img { width: 30px; height: 30px; }
+    .nav-brand b { color: var(--yellow); font-weight: 400; }
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
+      transition: color .2s;
     }
-
-    .store-btn .store-label small {
-      display: block;
-      font-size: 10px;
-      font-weight: 400;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .nav-links a:hover { color: var(--yellow); }
+    .nav-cta {
+      background: var(--yellow); color: #000 !important; padding: 8px 18px; border-radius: 999px;
+      font-weight: 800 !important;
+      transition: transform .2s, box-shadow .2s;
     }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(255,200,0,.35); }
+    @media (max-width: 640px) { .nav-links a:not(.nav-cta) { display: none; } }
 
-    .coming-soon-note {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 1px;
+    /* ── Hero ───────────────────────────────────────────────────────── */
+    .hero {
+      position: relative; min-height: 100svh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 20px 80px;
     }
-
-    /* DIVIDER */
-    .divider {
-      width: 100%;
-      max-width: 860px;
-      height: 1px;
-      background: #2A2A2A;
-      margin: 0 24px;
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(255,200,0,.45); color: var(--yellow);
+      font-size: 12px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+      padding: 8px 18px; border-radius: 999px; margin-bottom: 34px;
+      background: rgba(255,200,0,.06);
+      animation: rise .7s .05s both;
     }
-
-    /* FEATURES */
-    .features {
-      width: 100%;
-      max-width: 860px;
-      padding: 60px 24px;
+    .badge .dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 0 0 rgba(46,204,113,.6); animation: ping 2s infinite;
     }
+    @keyframes ping { 70% { box-shadow: 0 0 0 9px rgba(46,204,113,0); } 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); } }
 
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 32px;
-      text-align: center;
+    .hero img.mark { width: 96px; height: 96px; margin-bottom: 18px; animation: rise .7s .12s both; filter: drop-shadow(0 0 34px rgba(255,200,0,.35)); }
+    h1 {
+      font-family: "Anton", sans-serif; font-weight: 400;
+      font-size: clamp(64px, 12vw, 148px);
+      line-height: .96; letter-spacing: .01em; text-transform: uppercase;
+      animation: rise .7s .2s both;
     }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
+    h1 .stroke {
+      color: transparent; -webkit-text-stroke: 2px var(--text);
     }
-
-    .feature-card {
-      background: var(--card);
-      border: 1px solid #2A2A2A;
-      border-radius: 16px;
-      padding: 24px;
-      transition: border-color 0.2s;
+    h1 .fill { color: var(--yellow); text-shadow: 0 0 60px rgba(255,200,0,.35); }
+    .slogan {
+      font-style: italic; color: var(--muted); margin-top: 18px; font-size: clamp(15px, 2.4vw, 19px);
+      animation: rise .7s .3s both;
     }
-
-    .feature-card:hover {
-      border-color: var(--gold);
+    .slogan b { color: var(--text); }
+    .hero-desc {
+      max-width: 560px; margin: 22px auto 0; color: var(--muted); font-size: 16px;
+      animation: rise .7s .38s both;
     }
+    .hero-desc strong { color: var(--yellow-soft); font-weight: 700; }
 
-    .feature-icon {
-      font-size: 28px;
-      margin-bottom: 12px;
+    .store-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 40px; animation: rise .7s .48s both; }
+    .store-btn {
+      display: flex; align-items: center; gap: 12px; text-decoration: none;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+      padding: 12px 24px; cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
     }
+    .store-btn:hover { transform: translateY(-3px); border-color: var(--yellow); box-shadow: 0 12px 34px rgba(255,200,0,.16); }
+    .store-btn svg { width: 28px; height: 28px; flex-shrink: 0; }
+    .store-btn small { display: block; font-size: 10.5px; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; font-weight: 700; text-align: left; line-height: 1.3; }
+    .store-btn span { display: block; font-size: 17px; font-weight: 800; color: var(--text); line-height: 1.25; text-align: left; }
 
-    .feature-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--white);
+    @keyframes rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+
+    /* ── Kayan şerit ────────────────────────────────────────────────── */
+    .ticker-wrap {
+      background: var(--yellow); transform: rotate(-1.6deg) scale(1.02); overflow: hidden;
+      padding: 13px 0; margin: -12px 0 0; position: relative; z-index: 5;
+      border-top: 3px solid #000; border-bottom: 3px solid #000;
     }
-
-    .feature-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
+    .ticker {
+      display: flex; width: max-content; animation: scroll 26s linear infinite;
+      font-family: "Anton", sans-serif; font-size: 19px; letter-spacing: .08em;
+      color: #0a0800; text-transform: uppercase; white-space: nowrap;
     }
+    .ticker span { padding: 0 22px; }
+    @keyframes scroll { to { transform: translateX(-50%); } }
 
-    /* PLATFORM */
-    .platform {
-      width: 100%;
-      max-width: 860px;
-      padding: 0 24px 60px;
-      text-align: center;
+    /* ── Bölümler ───────────────────────────────────────────────────── */
+    section { position: relative; padding: 110px 24px; max-width: 1120px; margin: 0 auto; }
+    .kicker {
+      font-size: 12px; font-weight: 800; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--yellow); margin-bottom: 14px;
     }
-
-    .platform-tags {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 20px;
+    h2 {
+      font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase;
+      font-size: clamp(34px, 5.4vw, 56px); line-height: 1.04; letter-spacing: .015em;
+      margin-bottom: 18px;
     }
+    .sub { color: var(--muted); max-width: 640px; font-size: 16px; }
 
-    .tag {
-      background: var(--card);
-      border: 1px solid #2A2A2A;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      padding: 8px 18px;
-      border-radius: 20px;
-      text-transform: uppercase;
+    /* Nasıl çalışır — telefon + adımlar */
+    .how { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+    @media (max-width: 880px) { .how { grid-template-columns: 1fr; gap: 50px; } }
+
+    .steps { display: flex; flex-direction: column; gap: 8px; margin-top: 34px; counter-reset: step; }
+    .step {
+      display: flex; gap: 22px; padding: 26px 0; border-top: 1px solid var(--line);
     }
+    .step:last-child { border-bottom: 1px solid var(--line); }
+    .step-num {
+      font-family: "Anton", sans-serif; font-size: 40px; color: transparent;
+      -webkit-text-stroke: 1.5px var(--yellow); line-height: 1; flex-shrink: 0; min-width: 64px;
+    }
+    .step h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .step p { color: var(--muted); font-size: 14.5px; }
 
-    /* FOOTER */
+    /* Telefon mockup */
+    .phone-stage { position: relative; display: flex; justify-content: center; }
+    .phone {
+      width: 300px; border-radius: 44px; background: #0d0b06;
+      border: 1.5px solid #33301f; padding: 12px;
+      box-shadow: 0 40px 90px rgba(0,0,0,.7), 0 0 90px rgba(255,200,0,.09);
+      transform: rotate(3deg);
+      transition: transform .5s cubic-bezier(.2,.8,.2,1);
+    }
+    .phone-stage:hover .phone { transform: rotate(0deg) translateY(-6px); }
+    .screen {
+      background: linear-gradient(175deg, #14110a, #0b0905 60%);
+      border-radius: 34px; overflow: hidden; border: 1px solid #221f12;
+    }
+    .notch { width: 110px; height: 26px; background: #000; border-radius: 0 0 16px 16px; margin: 0 auto; }
+    .app-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px 10px;
+    }
+    .app-head .t { font-family: "Anton", sans-serif; font-size: 15px; letter-spacing: .05em; }
+    .app-head .t b { color: var(--yellow); font-weight: 400; }
+    .tabs { display: flex; gap: 8px; padding: 4px 16px 12px; }
+    .tab { font-size: 10.5px; font-weight: 800; padding: 5px 12px; border-radius: 999px; color: var(--muted); border: 1px solid var(--line); }
+    .tab.on { background: var(--yellow); color: #000; border-color: var(--yellow); }
+    .mcard {
+      margin: 0 14px 12px; background: #171408; border: 1px solid #2c2713; border-radius: 16px; padding: 14px;
+    }
+    .mcard .league { font-size: 9.5px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; font-weight: 700; display: flex; justify-content: space-between; }
+    .mcard .live { color: var(--red); display: inline-flex; align-items: center; gap: 4px; }
+    .live i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); display: inline-block; animation: blink 1.1s infinite; }
+    @keyframes blink { 50% { opacity: .25; } }
+    .score-row { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 10px; }
+    .team { font-size: 13px; font-weight: 800; width: 88px; }
+    .team:last-child { text-align: right; }
+    .score { font-family: "Anton", sans-serif; font-size: 26px; color: var(--yellow); letter-spacing: .08em; }
+    .koku-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,200,0,.12); border: 1px solid rgba(255,200,0,.5); color: var(--yellow);
+      font-size: 10.5px; font-weight: 800; border-radius: 999px; padding: 4px 11px;
+      letter-spacing: .06em;
+    }
+    .statbar { margin-top: 10px; }
+    .statbar .lbl { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+    .track { height: 5px; background: #262110; border-radius: 4px; overflow: hidden; }
+    .fillb { height: 100%; background: var(--yellow); border-radius: 4px; }
+    .toast {
+      position: absolute; top: 46px; right: -26px;
+      background: #fff; color: #111; border-radius: 14px; padding: 11px 15px;
+      font-size: 12px; font-weight: 700; box-shadow: 0 18px 44px rgba(0,0,0,.55);
+      display: flex; gap: 9px; align-items: center;
+      animation: toastIn 5.5s ease-in-out infinite;
+    }
+    .toast .ico { font-size: 17px; }
+    .toast small { display: block; font-weight: 600; color: #666; font-size: 10.5px; }
+    @keyframes toastIn {
+      0%, 12% { opacity: 0; transform: translateY(-14px) scale(.95); }
+      20%, 78% { opacity: 1; transform: none; }
+      88%, 100% { opacity: 0; transform: translateY(-8px) scale(.97); }
+    }
+    @media (max-width: 420px) { .toast { right: 2px; } }
+
+    /* Özellik kartları */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    @media (max-width: 880px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 20px;
+      padding: 28px 24px; position: relative; overflow: hidden;
+      transition: transform .25s, border-color .25s;
+    }
+    .card::after {
+      content: ""; position: absolute; top: 0; left: 24px; right: 24px; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,200,0,.55), transparent);
+      opacity: 0; transition: opacity .25s;
+    }
+    .card:hover { transform: translateY(-5px); border-color: rgba(255,200,0,.4); }
+    .card:hover::after { opacity: 1; }
+    .card .ic {
+      width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center;
+      background: rgba(255,200,0,.09); border: 1px solid rgba(255,200,0,.28); margin-bottom: 18px;
+    }
+    .card .ic svg { width: 22px; height: 22px; stroke: var(--yellow); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .card h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: 14px; }
+
+    /* Premium */
+    .premium {
+      border: 1.5px solid rgba(255,200,0,.5); border-radius: 26px;
+      background:
+        radial-gradient(600px 300px at 85% -20%, rgba(255,200,0,.14), transparent),
+        var(--panel);
+      padding: 54px 48px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center;
+    }
+    @media (max-width: 780px) { .premium { grid-template-columns: 1fr; padding: 40px 28px; } }
+    .premium h2 { font-size: clamp(30px, 4.4vw, 44px); }
+    .plist { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .plist li { display: flex; gap: 12px; align-items: center; color: var(--text); font-weight: 600; font-size: 15px; }
+    .plist .chk {
+      width: 22px; height: 22px; border-radius: 50%; background: var(--yellow); color: #000;
+      display: grid; place-items: center; font-size: 12px; font-weight: 900; flex-shrink: 0;
+    }
+    .p-cta { text-align: center; }
+    .p-cta .big { font-family: "Anton", sans-serif; font-size: 60px; color: var(--yellow); line-height: 1; }
+    .p-cta .per { color: var(--muted); font-size: 13px; margin-top: 6px; }
+    .p-cta a {
+      display: inline-block; margin-top: 22px; background: var(--yellow); color: #000;
+      font-weight: 800; text-decoration: none; padding: 13px 34px; border-radius: 999px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .p-cta a:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,200,0,.35); }
+    .p-note { font-size: 11.5px; color: var(--muted); margin-top: 12px; }
+
+    /* Disclaimer + footer */
+    .disclaimer {
+      max-width: 760px; margin: 0 auto; text-align: center; color: var(--muted);
+      font-size: 13px; border: 1px dashed var(--line); border-radius: 14px; padding: 18px 22px;
+    }
+    .disclaimer b { color: var(--text); }
     footer {
-      width: 100%;
-      border-top: 1px solid #1E1E1E;
-      padding: 24px;
-      text-align: center;
-      font-size: 12px;
-      color: #444;
+      border-top: 1px solid var(--line); margin-top: 40px;
+      padding: 44px 24px 54px; text-align: center;
     }
+    .f-brand { font-family: "Anton", sans-serif; font-size: 22px; letter-spacing: .05em; }
+    .f-brand b { color: var(--yellow); font-weight: 400; }
+    .f-links { display: flex; gap: 26px; justify-content: center; margin: 20px 0 14px; flex-wrap: wrap; }
+    .f-links a { color: var(--muted); font-size: 13.5px; font-weight: 600; text-decoration: none; transition: color .2s; }
+    .f-links a:hover { color: var(--yellow); }
+    .copy { color: #5d573f; font-size: 12px; }
 
-    /* GLOW EFFECT */
-    .glow {
-      position: relative;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .ticker { animation: none; }
     }
-
-    .glow::before {
-      content: '';
-      position: absolute;
-      top: -120px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(255,215,0,0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
   </style>
 </head>
 <body>
+<div class="grain"></div>
 
-  <div class="hero glow">
-    <div class="badge">Uygulama Mağazasında Sizlerle</div>
+<nav>
+  <a class="nav-brand" href="#"><img src="logo.svg" alt="" />GOL <b>KOKUSU</b></a>
+  <div class="nav-links">
+    <a href="#nasil">Nasıl Çalışır</a>
+    <a href="#ozellikler">Özellikler</a>
+    <a href="#premium">Premium</a>
+    <a href="https://golkokusu.com/destek">Destek</a>
+    <a class="nav-cta" href="#indir">İndir</a>
+  </div>
+</nav>
 
-    <img src="logo.svg" alt="Gol Kokusu Logo" style="width: 120px; height: 120px; margin-bottom: 24px; display: block; margin-left: auto; margin-right: auto;" />
+<!-- ── HERO ─────────────────────────────────────────────────────────── -->
+<header class="hero" id="indir">
+  <div class="floodlight"></div>
+  <div class="pitch-circle"></div>
 
-    <div class="logo">GOL <span>KOKUSU</span></div>
-    <div class="slogan">"Kokuyu aldın mı? Ne kokusu? Gol Kokusu."</div>
+  <div class="badge"><span class="dot"></span> App Store ve Google Play'de Yayında</div>
+  <img class="mark" src="logo.svg" alt="Gol Kokusu logosu" />
+  <h1><span class="stroke">GOL</span> <span class="fill">KOKUSU</span></h1>
+  <p class="slogan">"Kokuyu aldın mı? Ne kokusu? <b>Gol Kokusu.</b>"</p>
+  <p class="hero-desc">
+    Futbol maçlarını canlı takip et. Algoritmamız <strong>yüksek gol potansiyeli</strong> taşıyan
+    maçları senin için koklar — sen sadece bildirimi bekle, golü herkesten önce hisset.
+  </p>
 
-    <p class="description">
-      Futbol maçlarını canlı takip et. Algoritmamız yüksek gol potansiyeli taşıyan maçları senin için filtreler —
-      sen sadece kokuyu al.
-    </p>
+  <div class="store-buttons">
+    <a class="store-btn" href="https://apps.apple.com/tr/app/gol-kokusu/id6785077166" target="_blank" rel="noopener" aria-label="App Store'dan indir">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#FFFFFF" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.14-2.19 1.3-2.17 3.87.02 3.06 2.65 4.08 2.68 4.1-.03.07-.42 1.44-1.36 2.51M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+      </svg>
+      <div><small>Şimdi indir</small><span>App Store</span></div>
+    </a>
+    <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.golkokusu.app" target="_blank" rel="noopener" aria-label="Google Play'den indir">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#00A0FF" d="M.35 1.69C.13 2.03 0 2.5 0 3.09v17.82c0 .59.13 1.06.35 1.4l.07.07 9.98-9.98v-.23L.42 1.62l-.07.07z"/>
+        <path fill="#00D876" d="M4.17.24L17.04 7.67l-2.78 2.79L4.17.24z"/>
+        <path fill="#FFBC00" d="M20.93 10.6l-2.81-1.62-3.12 3.12 3.12 3.12 2.84-1.64c.81-.47.81-1.23-.03-1.98z"/>
+        <path fill="#FF3A44" d="M3.18 23.76c.3.17.64.22.99.14l12.87-7.43-2.78-2.79-11.08 10.08z"/>
+      </svg>
+      <div><small>Şimdi indir</small><span>Google Play</span></div>
+    </a>
+  </div>
+</header>
 
-    <div class="store-buttons">
-      <a class="store-btn" href="https://apps.apple.com/tr/app/gol-kokusu/id6785077166" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#FFFFFF" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.14-2.19 1.3-2.17 3.87.02 3.06 2.65 4.08 2.68 4.1-.03.07-.42 1.44-1.36 2.51M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-        </svg>
-        <div class="store-label">
-          App Store
+<!-- ── KAYAN ŞERİT ──────────────────────────────────────────────────── -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker">
+    <span>Kokuyu aldın mı?</span><span>⚽</span><span>Ne kokusu?</span><span>⚽</span><span>Gol Kokusu</span><span>⚽</span>
+    <span>Golü herkesten önce kokla</span><span>⚽</span>
+    <span>Kokuyu aldın mı?</span><span>⚽</span><span>Ne kokusu?</span><span>⚽</span><span>Gol Kokusu</span><span>⚽</span>
+    <span>Golü herkesten önce kokla</span><span>⚽</span>
+  </div>
+</div>
+
+<!-- ── NASIL ÇALIŞIR ────────────────────────────────────────────────── -->
+<section id="nasil">
+  <div class="how">
+    <div>
+      <div class="kicker">Nasıl Çalışır</div>
+      <h2>Algoritma koklar,<br />sen izlersin</h2>
+      <p class="sub">Dünya genelinde yüzlerce ligi anlık tarıyoruz. Şut, atak, korner, hakimiyet —
+        tüm canlı veriler tek tek puanlanıyor; koku eşiği aşılınca maç sana düşüyor.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div>
+            <h3>Canlı veriler taranır</h3>
+            <p>Algoritmamız oynanan her maçın istatistiklerini dakika dakika izler ve puanlar.</p>
+          </div>
         </div>
-      </a>
-
-      <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.golkokusu.app" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#00A0FF" d="M.35 1.69C.13 2.03 0 2.5 0 3.09v17.82c0 .59.13 1.06.35 1.4l.07.07 9.98-9.98v-.23L.42 1.62l-.07.07z"/>
-          <path fill="#00D876" d="M4.17.24L17.04 7.67l-2.78 2.79L4.17.24z"/>
-          <path fill="#FFBC00" d="M20.93 10.6l-2.81-1.62-3.12 3.12 3.12 3.12 2.84-1.64c.81-.47.81-1.23-.03-1.98z"/>
-          <path fill="#FF3A44" d="M3.18 23.76c.3.17.64.22.99.14l12.87-7.43-2.78-2.79-11.08 10.08z"/>
-        </svg>
-        <div class="store-label">
-          Google Play
+        <div class="step">
+          <div class="step-num">02</div>
+          <div>
+            <h3>Koku alınır, bildirim gelir</h3>
+            <p>Gol potansiyeli eşiği aşan maç "Kokladıklarımız"a düşer; telefonuna anında bildirim gelir.</p>
+          </div>
         </div>
-      </a>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div>
+            <h3>Golü canlı yakala</h3>
+            <p>Maçı aç, istatistikleri canlı izle. Gol ve maç sonu bildirimleriyle hiçbir anı kaçırma.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phone-stage">
+      <div class="phone">
+        <div class="screen">
+          <div class="notch"></div>
+          <div class="app-head">
+            <div class="t">GOL <b>KOKUSU</b></div>
+            <div style="font-size:15px">👃</div>
+          </div>
+          <div class="tabs">
+            <div class="tab">Canlı</div>
+            <div class="tab on">Kokladıklarımız</div>
+            <div class="tab">Profil</div>
+          </div>
+
+          <div class="mcard">
+            <div class="league"><span>Premier Ligi</span><span class="live"><i></i>63'</span></div>
+            <div class="score-row">
+              <div class="team">Arılar FC</div>
+              <div class="score">2 – 1</div>
+              <div class="team">Yıldız SK</div>
+            </div>
+            <span class="koku-pill">👃 KOKU ALINDI · +2 GOL POTANSİYELİ</span>
+            <div class="statbar">
+              <div class="lbl"><span>İsabetli şut</span><span>9</span></div>
+              <div class="track"><div class="fillb" style="width:78%"></div></div>
+            </div>
+            <div class="statbar">
+              <div class="lbl"><span>Tehlikeli atak</span><span>64</span></div>
+              <div class="track"><div class="fillb" style="width:64%"></div></div>
+            </div>
+          </div>
+
+          <div class="mcard" style="opacity:.55">
+            <div class="league"><span>Süper Kupa Ligi</span><span class="live"><i></i>58'</span></div>
+            <div class="score-row">
+              <div class="team">Kartal Gücü</div>
+              <div class="score">1 – 1</div>
+              <div class="team">Aslanlar</div>
+            </div>
+            <span class="koku-pill">👃 İZLENİYOR</span>
+          </div>
+        </div>
+        <div class="toast">
+          <div class="ico">⚽</div>
+          <div>GOOOL! Arılar FC 3-1<small>Gol Kokusu · şimdi</small></div>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="divider"></div>
+<!-- ── ÖZELLİKLER ───────────────────────────────────────────────────── -->
+<section id="ozellikler">
+  <div class="kicker">Özellikler</div>
+  <h2>Sahada ne varsa<br />cebinde de var</h2>
 
-  <section class="features">
-    <div class="section-title">Özellikler</div>
-    <div class="feature-grid">
-
-      <div class="feature-card">
-        <div class="feature-icon">&#128248;</div>
-        <div class="feature-title">Canlı Maç Takibi</div>
-        <div class="feature-desc">Dünya genelinde yüzlerce lig ve maç anlık olarak listelenir.</div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">&#128064;</div>
-        <div class="feature-title">Kokladıklarımız</div>
-        <div class="feature-desc">Algoritmamızın yüksek gol ihtimali tespit ettiği maçlar ayrı bir sekmede öne çıkar.</div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">&#11088;</div>
-        <div class="feature-title">Favori Maçlar</div>
-        <div class="feature-desc">Beğendiklerini favorilere al; gol, kırmızı kart ve maç sonu için anlık bildirim al.</div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">&#128202;</div>
-        <div class="feature-title">Detaylı İstatistikler</div>
-        <div class="feature-desc">Ataklar, şutlar, top hakimiyeti, korner ve kart verileri karşılaştırmalı göster.</div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">&#128336;</div>
-        <div class="feature-title">Geçmiş Analiz</div>
-        <div class="feature-desc">Geçmiş tahminlerin doğruluk oranları ve istatistikleri incele.</div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">&#128276;</div>
-        <div class="feature-title">Kişisel Bildirimler</div>
-        <div class="feature-desc">Hangi bildirim türlerini alacağını kendin seç, gerisi bize kalmış.</div>
-      </div>
-
+  <div class="grid">
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a12 12 0 0 0 0 17M20.5 3.5a12 12 0 0 1 0 17"/></svg></div>
+      <h3>Canlı Maç Takibi</h3>
+      <p>Dünya genelinde yüzlerce lig ve maç, anlık skorlarla tek ekranda listelenir.</p>
     </div>
-  </section>
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 14c2-1 2-4 0-5M9 16c3-1.5 3-7 0-9M14 18c4-2 4-10 0-12M19 20c5-2.5 5-13 0-16"/></svg></div>
+      <h3>Kokladıklarımız</h3>
+      <p>Algoritmanın yüksek gol ihtimali tespit ettiği maçlar ayrı sekmede öne çıkar.</p>
+    </div>
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.6 1-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-1z"/></svg></div>
+      <h3>Favori Maçlar</h3>
+      <p>Beğendiklerini favorilere al; gol ve maç sonu için sana özel anlık bildirim al.</p>
+    </div>
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></div>
+      <h3>Detaylı İstatistikler</h3>
+      <p>Ataklar, şutlar, top hakimiyeti, korner ve kart verileri karşılaştırmalı gösterilir.</p>
+    </div>
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.8 2.8M9 2.5h6"/></svg></div>
+      <h3>Geçmiş Analiz</h3>
+      <p>Geçmiş tahminlerin doğruluk oranlarını ve istatistiklerini şeffafça incele.</p>
+    </div>
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10.3 20a2 2 0 0 0 3.4 0"/></svg></div>
+      <h3>Kişisel Bildirimler</h3>
+      <p>Hangi bildirim türlerini alacağını kendin seç — gerisi bize kalmış.</p>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    &copy; 2026 Gol Kokusu. Tüm hakları saklıdır.
-  </footer>
+<!-- ── PREMIUM ──────────────────────────────────────────────────────── -->
+<section id="premium">
+  <div class="premium">
+    <div>
+      <div class="kicker">Premium Üyelik</div>
+      <h2>Kokuyu tam al</h2>
+      <ul class="plist">
+        <li><span class="chk">✓</span> Sınırsız canlı analiz ve koklanan maç erişimi</li>
+        <li><span class="chk">✓</span> Tüm bildirim türleri: gol, maç sonu, favoriler</li>
+        <li><span class="chk">✓</span> Tamamen reklamsız deneyim</li>
+      </ul>
+    </div>
+    <div class="p-cta">
+      <div class="big">48 SAAT</div>
+      <div class="per">ücretsiz deneme ile başla</div>
+      <a href="#indir">Hemen Dene</a>
+      <div class="p-note">Güncel abonelik fiyatı uygulama içinde görüntülenir.<br />İstediğin an mağazadan iptal edebilirsin.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── YASAL NOT + FOOTER ───────────────────────────────────────────── -->
+<section style="padding-top:0">
+  <div class="disclaimer">
+    <b>Gol Kokusu bir bilgi ve eğlence uygulamasıdır.</b> Bahis veya kumar hizmeti sunmaz, bu tür
+    platformlara yönlendirme yapmaz. Sunulan istatistiksel analizler kesin sonuç garantisi içermez.
+  </div>
+</section>
+
+<footer>
+  <div class="f-brand">GOL <b>KOKUSU</b></div>
+  <div class="f-links">
+    <a href="https://golkokusu.com/gizlilik">Gizlilik Politikası ve Kullanım Koşulları</a>
+    <a href="https://golkokusu.com/destek">Destek</a>
+    <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a>
+  </div>
+  <div class="copy">© 2026 Akın Boztaş · Gol Kokusu · Tüm hakları saklıdır.</div>
+</footer>
 
 </body>
 </html>

@@ -3,89 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gol Kokusu – Gizlilik Politikası ve Kullanım Koşulları</title>
+  <title>Gizlilik Politikası ve Kullanım Koşulları — Gol Kokusu</title>
+  <meta name="description" content="Gol Kokusu kullanım koşulları, gizlilik politikası ve KVKK aydınlatma metni." />
+  <link rel="icon" type="image/svg+xml" href="logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;600;700;800&display=swap&subset=latin-ext" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080602;
+      --panel: #12100a;
+      --line: #2a2515;
+      --yellow: #ffc800;
+      --yellow-soft: #ffe066;
+      --text: #f4f1e6;
+      --muted: #a39b82;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #0d0d0d;
-      color: #e0e0e0;
-      line-height: 1.7;
-      padding: 0 16px 60px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Manrope", -apple-system, sans-serif;
+      line-height: 1.75;
+      overflow-x: hidden;
     }
-    .container { max-width: 780px; margin: 0 auto; }
-    header {
-      text-align: center;
-      padding: 48px 0 32px;
-      border-bottom: 1px solid #2a2a2a;
-      margin-bottom: 40px;
+    ::selection { background: var(--yellow); color: #000; }
+
+    .grain {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none; opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
-    header h1 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.5px;
+
+    /* ── Nav ────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 28px;
+      background: linear-gradient(to bottom, rgba(8,6,2,.92), rgba(8,6,2,.75));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
     }
-    header p { font-size: 0.9rem; color: #888; margin-top: 8px; }
+    .nav-brand {
+      font-family: "Anton", sans-serif; font-size: 20px; letter-spacing: .04em;
+      color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px;
+    }
+    .nav-brand img { width: 30px; height: 30px; }
+    .nav-brand b { color: var(--yellow); font-weight: 400; }
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--yellow); }
+    .nav-cta {
+      background: var(--yellow); color: #000 !important; padding: 8px 18px; border-radius: 999px;
+      font-weight: 800 !important;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(255,200,0,.35); }
+    @media (max-width: 640px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+    /* ── Başlık ─────────────────────────────────────────────────────── */
+    .page-head {
+      position: relative; text-align: center; padding: 150px 20px 50px; overflow: hidden;
+    }
+    .page-head::before {
+      content: ""; position: absolute; top: -55%; left: 50%; transform: translateX(-50%);
+      width: 1100px; height: 700px; pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(255,200,0,.13) 0%, rgba(255,200,0,.04) 45%, transparent 70%);
+    }
+    .kicker {
+      font-size: 12px; font-weight: 800; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--yellow); margin-bottom: 14px;
+    }
+    h1 {
+      font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase;
+      font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: .015em;
+    }
+    h1 b { color: var(--yellow); font-weight: 400; text-shadow: 0 0 50px rgba(255,200,0,.3); }
+    .page-head p { color: var(--muted); margin-top: 14px; font-size: 14px; }
+
+    main { max-width: 800px; margin: 0 auto; padding: 0 24px 90px; }
+
+    .intro-box {
+      background: var(--panel);
+      border: 1px solid rgba(255,200,0,.35);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-bottom: 48px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .intro-box strong { color: var(--yellow); letter-spacing: .12em; }
+    .intro-box em { color: var(--text); font-style: normal; font-weight: 700; }
+
     h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 36px 0 12px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid #222;
+      font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase;
+      font-size: 22px; letter-spacing: .03em; color: var(--text);
+      margin: 46px 0 14px; padding-top: 26px; border-top: 1px solid var(--line);
+      display: flex; gap: 14px; align-items: baseline;
+    }
+    h2 .no {
+      color: transparent; -webkit-text-stroke: 1.2px var(--yellow);
+      font-size: 26px; flex-shrink: 0;
     }
     h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #cccccc;
+      font-size: 15px; font-weight: 800; color: var(--yellow-soft);
       margin: 24px 0 8px;
     }
-    p { margin-bottom: 12px; font-size: 0.93rem; color: #c8c8c8; }
-    ul { margin: 8px 0 12px 20px; }
-    ul li { font-size: 0.93rem; color: #c8c8c8; margin-bottom: 6px; }
-    .intro-box {
-      background: #161616;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      padding: 20px 24px;
-      margin-bottom: 32px;
-      font-size: 0.88rem;
-      color: #aaa;
-    }
-    .intro-box strong { color: #e0e0e0; }
-    .highlight { color: #4caf8a; font-weight: 600; }
-    a { color: #4caf8a; text-decoration: none; }
+    p { margin-bottom: 12px; font-size: 14.5px; color: #cfc9b6; }
+    ul { margin: 8px 0 14px 20px; }
+    ul li { font-size: 14.5px; color: #cfc9b6; margin-bottom: 7px; }
+    ul li strong, p strong { color: var(--text); }
+    .highlight { color: var(--yellow); font-weight: 700; }
+    a { color: var(--yellow); text-decoration: none; font-weight: 700; }
     a:hover { text-decoration: underline; }
+
+    /* ── Footer ─────────────────────────────────────────────────────── */
     footer {
-      margin-top: 60px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #555;
-      border-top: 1px solid #1e1e1e;
-      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      padding: 44px 24px 54px; text-align: center;
     }
+    .f-brand { font-family: "Anton", sans-serif; font-size: 22px; letter-spacing: .05em; }
+    .f-brand b { color: var(--yellow); font-weight: 400; }
+    .f-links { display: flex; gap: 26px; justify-content: center; margin: 20px 0 14px; flex-wrap: wrap; }
+    .f-links a { color: var(--muted); font-size: 13.5px; font-weight: 600; }
+    .f-links a:hover { color: var(--yellow); }
+    .copy { color: #5d573f; font-size: 12px; }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="grain"></div>
 
-  <header>
-    <h1>Gol Kokusu</h1>
-    <p>Kullanım Koşulları ve Gizlilik Politikası</p>
-    <p>KVKK Aydınlatması ve Sorumluluk Sınırlaması Dahil</p>
-    <p style="margin-top:12px;">Yürürlük Tarihi: 02 Mayıs 2025</p>
-  </header>
+<nav>
+  <a class="nav-brand" href="https://golkokusu.com"><img src="logo.svg" alt="" />GOL <b>KOKUSU</b></a>
+  <div class="nav-links">
+    <a href="https://golkokusu.com/#nasil">Nasıl Çalışır</a>
+    <a href="https://golkokusu.com/#ozellikler">Özellikler</a>
+    <a href="https://golkokusu.com/destek">Destek</a>
+    <a class="nav-cta" href="https://golkokusu.com/#indir">İndir</a>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="kicker">Yasal</div>
+  <h1>Kullanım Koşulları ve<br /><b>Gizlilik Politikası</b></h1>
+  <p>KVKK Aydınlatması ve Sorumluluk Sınırlaması Dahil · Yürürlük Tarihi: 02 Mayıs 2025</p>
+</header>
+
+<main>
 
   <div class="intro-box">
-    <strong>GİRİŞ</strong><br/>
+    <strong>GİRİŞ</strong><br />
     Bu belge; Gol Kokusu mobil uygulamasını (<em>"Uygulama"</em>) kullanan kişi (<em>"Kullanıcı"</em>) ile
     uygulamanın geliştiricisi Akın Boztaş (<em>"Geliştirici"</em>) arasındaki kullanım koşullarını ve gizlilik
     politikasını düzenlemektedir. Uygulamayı indirerek veya kullanarak bu belgedeki koşulları kabul etmiş sayılırsınız.
   </div>
 
   <!-- 1 -->
-  <h2>1. UYGULAMA NEDİR?</h2>
+  <h2><span class="no">01</span> Uygulama Nedir?</h2>
   <p>
     Gol Kokusu; futbol maçlarının canlı takibini, gol/maç bitiş anlık bildirimlerini ve kullanıcıya
     istatistiksel veri sunan analiz ekranlarını içeren bir <span class="highlight">bilgilendirme uygulamasıdır</span>.
@@ -94,7 +171,7 @@
   </p>
 
   <!-- 2 -->
-  <h2>2. HESAP VE KAYIT</h2>
+  <h2><span class="no">02</span> Hesap ve Kayıt</h2>
   <ul>
     <li>Kayıt için geçerli bir e-posta adresi ve şifre oluşturmanız gerekir.</li>
     <li>Kayıt sırasında verdiğiniz bilgilerin doğru ve güncel olmasından siz sorumlusunuz.</li>
@@ -104,7 +181,7 @@
   </ul>
 
   <!-- 3 -->
-  <h2>3. PUSH BİLDİRİMLERİ</h2>
+  <h2><span class="no">03</span> Push Bildirimleri</h2>
   <p>
     Uygulama; gol, maç sonu ve favori maçlara ilişkin anlık bildirimler gönderir. Bildirimleri istediğiniz zaman:
   </p>
@@ -117,7 +194,7 @@
   </p>
 
   <!-- 4 -->
-  <h2>4. ABONELİK</h2>
+  <h2><span class="no">04</span> Abonelik</h2>
   <h3>4.1 Ücretli Plan</h3>
   <p>
     Uygulama, ücretsiz temel özellikler ve ücretli premium plan içermektedir. Güncel fiyatlar uygulama içinde görüntülenir.
@@ -128,7 +205,7 @@
     Apple App Store tarafından yönetilmektedir. İlgili bağlantılar:
   </p>
   <ul>
-    <li>Google Play: <a href="https://play.google.com/store/account/subscriptions" target="_blank">play.google.com/store/account/subscriptions</a></li>
+    <li>Google Play: <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a></li>
     <li>App Store: support.apple.com &gt; Satın Alma ve Faturalama</li>
   </ul>
   <h3>4.3 Otomatik Yenileme</h3>
@@ -138,7 +215,7 @@
   </p>
 
   <!-- 5 -->
-  <h2>5. SORUMLULUK SINIRLAMASI</h2>
+  <h2><span class="no">05</span> Sorumluluk Sınırlaması</h2>
   <p>
     Uygulama 'olduğu gibi' sunulmaktadır. Akın Boztaş tarafından, aşağıda belirtilen konularda
     yürürlükteki mevzuatın izin verdiği ölçüde herhangi bir sorumluluk kabul edilmemektedir:
@@ -153,14 +230,14 @@
   </ul>
 
   <!-- 6 -->
-  <h2>6. FİKRİ MÜLKİYET</h2>
+  <h2><span class="no">06</span> Fikri Mülkiyet</h2>
   <p>
     Uygulama adı, logosu, tasarımı ve yazılımı Akın Boztaş'a aittir ve Türk Fikir ve Sanat Eserleri Kanunu (FSEK)
     kapsamında korunmaktadır. Uygulamayı kopyalayamaz, dağıtamaz veya tersine mühendislik yöntemiyle çözümlemeye çalışamazsınız.
   </p>
 
   <!-- 7 -->
-  <h2>7. GİZLİLİK VE KİŞİSEL VERİLER (KVKK)</h2>
+  <h2><span class="no">07</span> Gizlilik ve Kişisel Veriler (KVKK)</h2>
 
   <h3>7.1 Veri Sorumlusu</h3>
   <p>Veri Sorumlusu: Akın Boztaş &nbsp;|&nbsp; İletişim: <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a></p>
@@ -217,7 +294,7 @@
   </p>
 
   <!-- 8 -->
-  <h2>8. ÇOCUKLARIN GİZLİLİĞİ</h2>
+  <h2><span class="no">08</span> Çocukların Gizliliği</h2>
   <p>
     Uygulama 18 yaş altı bireylere yönelik değildir. Uygulama App Store ve Google Play yaş sınıflandırma
     kurallarına uygun şekilde <span class="highlight">18+ olarak sunulmaktadır</span>. Bu yaş grubuna ait verilerin
@@ -225,24 +302,24 @@
   </p>
 
   <!-- 9 -->
-  <h2>9. UYGULANACAK HUKUK</h2>
+  <h2><span class="no">09</span> Uygulanacak Hukuk</h2>
   <p>
     Bu sözleşme Türkiye Cumhuriyeti hukukuna tabidir. Uyuşmazlıklarda Türk mahkemeleri ve icra daireleri yetkilidir.
   </p>
 
   <!-- 10 -->
-  <h2>10. DEĞİŞİKLİKLER</h2>
+  <h2><span class="no">10</span> Değişiklikler</h2>
   <p>
     Bu sözleşme zaman zaman güncellenebilir. Önemli değişiklikler uygulama içi bildirim veya e-posta ile duyurulur.
     Değişiklikten sonra uygulamayı kullanmaya devam etmeniz yeni koşulları kabul ettiğiniz anlamına gelir.
   </p>
 
   <!-- 11 -->
-  <h2>11. İLETİŞİM</h2>
+  <h2><span class="no">11</span> İletişim</h2>
   <p>Her türlü soru ve talepleriniz için: <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a></p>
 
   <!-- 12 -->
-  <h2>12. LİSANS VE KULLANIM HAKKI</h2>
+  <h2><span class="no">12</span> Lisans ve Kullanım Hakkı</h2>
   <p>
     Geliştirici, bu belge kapsamında size aşağıdaki koşullarda sınırlı, münhasır olmayan, devredilemez ve
     geri alınabilir bir lisans vermektedir:
@@ -255,7 +332,7 @@
   </ul>
 
   <!-- 13 -->
-  <h2>13. YASAKLI KULLANIM</h2>
+  <h2><span class="no">13</span> Yasaklı Kullanım</h2>
   <p>Aşağıdaki eylemler kesinlikle yasaktır:</p>
   <ul>
     <li>Başkalarının hesaplarına yetkisiz erişim sağlamak.</li>
@@ -266,17 +343,24 @@
   </ul>
 
   <!-- 14 -->
-  <h2>14. HESAP ASKIYA ALMA VE FESİH</h2>
+  <h2><span class="no">14</span> Hesap Askıya Alma ve Fesih</h2>
   <p>
     Bu belgede yer alan herhangi bir koşulu ihlal etmeniz hâlinde hesabınız önceden bildirimde bulunulmaksızın
     askıya alınabilir veya tamamen silinebilir. Siz de istediğiniz zaman Ayarlar ekranındaki
     "Hesabımı kalıcı olarak sil" seçeneğiyle hesabınızı kapatarak bu sözleşmeyi sona erdirebilirsiniz.
   </p>
 
-  <footer>
-    &copy; 2026 · Gol Kokusu · Tüm hakları saklıdır.
-  </footer>
+</main>
 
-</div>
+<footer>
+  <div class="f-brand">GOL <b>KOKUSU</b></div>
+  <div class="f-links">
+    <a href="https://golkokusu.com">Ana Sayfa</a>
+    <a href="https://golkokusu.com/destek">Destek</a>
+    <a href="mailto:destek@golkokusu.com">destek@golkokusu.com</a>
+  </div>
+  <div class="copy">© 2026 Akın Boztaş · Gol Kokusu · Tüm hakları saklıdır.</div>
+</footer>
+
 </body>
 </html>
